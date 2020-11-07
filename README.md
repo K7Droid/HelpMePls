@@ -1,0 +1,2 @@
+# HelpMePls
+ Help Me Pls es una aplicación web que ayuda a personas que viajan a ciudades donde las personas solo hablan en su idioma nativo y las señales en las calles son confusas y, de igual forma, en el idioma que se habla allí para comunicarse y desenvolverse de mejor manera. Mediante las distintas herramientas que provee AWS el usuario será capaz de movilizarse con más confianza en la ciudad que visite y tener una mejor experiencia.
