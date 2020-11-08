@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>        
+        <!-- META SECTION -->
+        <title>Asistencias</title>            
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <!-- END META SECTION -->
+        
+        <!-- CSS INCLUDE -->         
+        <link rel="stylesheet" type="text/css" id="theme" href="css/theme-default.css"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="css/camera/camera.css"/>
+        <!-- EOF CSS INCLUDE -->                                      
+    </head>
+    <body>
+        <!-- START PAGE CONTAINER -->
+        <div class="page-container">
+            
+            <!-- START PAGE SIDEBAR -->
+            <div class="page-sidebar">
+                <!-- START X-NAVIGATION -->
+                <ul class="x-navigation">
+                    <li class="xn-logo">
+                        <a href="index.html">Help me Plz</a>
+                        <a href="#" class="x-navigation-control"></a>
+                    </li> 
+                    <li > 
+                        <a href="asistencias.html"><span class="fa fa-check-square-o"></span> <span class="xn-text">Help Me!</span></a>                        
+                    </li>
+                    
+                </ul>
+                <!-- END X-NAVIGATION -->
+            </div>
+            <!-- END PAGE SIDEBAR -->
+            
+            <!-- PAGE CONTENT -->
+            <div class="page-content">
+                
+                <!-- START X-NAVIGATION VERTICAL -->
+                <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
+                    <!-- TOGGLE NAVIGATION -->
+                    <li class="xn-icon-button">
+                        <a href="#" class="x-navigation-minimize"><span class="fa fa-dedent"></span></a>
+                    </li>
+                </ul>
+                <ul class="breadcrumb push-down-0">
+                    <li class="active">Options</li>
+                </ul>
+                <!-- END BREADCRUMB -->  
+                
+                <div class="page-title">                    
+                    <h2><span class="fa fa-comment"></span> Options</h2>
+                </div>
+                
+                <!-- START CONTENT WRAP -->
+                <div class="page-content-wrap ">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <button class="tile tile-success tile-valign" onclick="startCamera()">
+                                <i class="fa fa-camera" aria-hidden="true"></i>
+                                <p style="font-size: 42px">Take Picture</p>
+                            </button>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <button class="tile tile-danger tile-valign">
+                                <i class="fa fa-microphone" aria-hidden="true"></i>
+                                <p style="font-size: 42px">Record Audio</p>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row" id="showResult" style="display: none;">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading ui-draggable-handle">
+                                    <div class="panel-title-box">
+                                        <h3>Result</h3>
+                                    </div>                                     
+                                </div>
+                                <div class="panel-body">                                    
+                                    <div class="row stacked">
+                                        <div class="col-md-12" id="result_div">  
+                                        </div>
+                                        
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>              
+                <!-- END CONTENT WRAP -->
+                                
+                
+            </div>            
+            <!-- END PAGE CONTENT -->
+        </div>
+        <div class="modal" id="modal_basic" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <video id="player" autoplay></video>
+                        <canvas id="snapshot" width=500 height=375 style="display: none;"></canvas>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="capture"  class="btn btn-success"><i class="fa fa-camera"></i></button>
+                        <button id="repeat"  class="btn btn-warning" style="display:  none;" onclick="startCamera(); return false;"><i class="fa fa-repeat"></i></button>
+                        <button id="menus"  class="btn btn-info" style="display: none;" onclick="getText(1)">
+                            <span class="fa fa-cutlery"></span> Translate Menu
+                        </button>
+                        <button id="signal"  class="btn btn-info" style="display: none;" onclick="getText(2)">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Signals
+                        </button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="mb-control" data-box="#message-box-sound-2" style="display: none;" id="alert">d</button>
+        <div class="message-box message-box-danger animated fadeIn" data-sound="fail" id="message-box-sound-2">
+            <div class="mb-container">
+                <div class="mb-middle">
+                    <div class="mb-title"><span class="fa fa-times"></span> ERROR</div>
+                    <div class="mb-content">
+                        <p id="errortext">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at tellus sed mauris mollis pellentesque nec a ligula. Quisque ultricies eleifend lacinia. Nunc luctus quam pretium massa semper tincidunt. Praesent vel mollis eros. Fusce erat arcu, feugiat ac dignissim ac, aliquam sed urna. Maecenas scelerisque molestie justo, ut tempor nunc.</p>                    
+                    </div>
+                    <div class="mb-footer">
+                        <button class="btn btn-default btn-lg pull-right mb-control-close">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+
+
+        <!-- START PRELOADS -->
+        <audio id="audio-alert" src="audio/alert.mp3" preload="auto"></audio>
+        <audio id="audio-fail" src="audio/fail.mp3" preload="auto"></audio>
+        <!-- END PRELOADS -->              
+        
+    <!-- START SCRIPTS -->
+        <!-- START PLUGINS -->
+        <script type="text/javascript" src="js/plugins/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="js/plugins/bootstrap/bootstrap.min.js"></script>        
+        <!-- END PLUGINS -->
+
+        <!-- START THIS PAGE PLUGINS-->        
+        <script type='text/javascript' src='js/plugins/icheck/icheck.min.js'></script>
+        <script type="text/javascript" src="js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
+        
+        <script type="text/javascript" src="js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+        <script type="text/javascript" src="js/plugins/icheck/icheck.min.js"></script>
+        <!-- END THIS PAGE PLUGINS-->        
+
+        
+        <script type="text/javascript" src="js/plugins.js"></script>        
+        <script type="text/javascript" src="js/actions.js"></script>        
+        <!-- END TEMPLATE -->
+        <script>
+            const ec2_base_url = 'http://paginarequest' //Elastic Load Balancing
+
+            var player = document.getElementById('player'); 
+            var snapshotCanvas = document.getElementById('snapshot');
+            var captureButton = document.getElementById('capture');
+            var videoTracks;
+            var alerta = $('#alert');
+
+            $('#modal_basic').on('hidden.bs.modal', function () {
+                stopCamera();
+            })
+
+            function stopCamera(){
+                videoTracks.forEach(function(track) {track.stop()});
+            }
+
+            function startCamera(){
+                $('#showResult').css('display','none');
+                $('#result_div').html('')
+
+
+                $('#modal_basic').modal('show', {backdrop: 'static', keyboard: false});
+                $('#player').css('display', 'inherit');
+                $('#snapshot').css('display', 'none');
+                $('#menus').css('display', 'none');
+                $('#signal').css('display', 'none');
+                $('#repeat').css('display', 'none');
+                $('#capture').css('display', '');
+                navigator.mediaDevices.getUserMedia({video: true})
+                .then(handleSuccess);
+            }
+            
+            var handleSuccess = function(stream) {
+                // Attach the video stream to the video element and autoplay.
+                player.srcObject = stream;
+                videoTracks = stream.getVideoTracks();
+            };
+
+            captureButton.addEventListener('click', function() {
+                $('#player').css('display', 'none');
+                $('#snapshot').css('display', '');
+                $('#capture').css('display', 'none');
+                $('#menus').css('display', '');
+                $('#signal').css('display', '');
+                $('#repeat').css('display', '');
+                var context = snapshot.getContext('2d');
+                context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+                videoTracks.forEach(function(track) {track.stop()});
+            });
+
+
+            function getText(option){
+                var canvas = document.getElementById('snapshot');
+                var imgData = canvas.toDataURL();
+                var endpoint="";
+
+                switch(option){
+                    case 1:
+                        endpoint = "/endpoint de menu";
+                        break;
+                    case 2:
+                        endpoint = "/endpoint de senal";
+                        break;
+                    default:
+                        return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: ec2_base_url + endpoint,
+                    crossDomain: true,
+                    dataType: 'json',
+                    data: {
+                        tipo : 1,
+                        foto : imgData,
+                        extension: 'png'
+                    },
+                }).done((data)=>{
+                    if(data.error != 0 ){
+                        $('#errortext').html(data.message );
+                        alerta.click()
+                    }else{
+                        $('#showResult').css('display','inherit');
+                        $('#result_div').html('<p>'+data.message+'</p>')
+                        $('#modal_basic').modal('hide');
+                    }
+                }).fail(error => {
+                    $('#errortext').html(error );
+                    alerta.click()
+                })
+            }
+
+
+
+
+        </script>   
+    <!-- END SCRIPTS -->         
+    </body>
+</html>
+
+
+
+
+
+
