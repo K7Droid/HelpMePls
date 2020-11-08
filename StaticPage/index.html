@@ -13,6 +13,7 @@
         <!-- CSS INCLUDE -->         
         <link rel="stylesheet" type="text/css" id="theme" href="css/theme-default.css"/>
         <link rel="stylesheet" type="text/css" id="theme" href="css/camera/camera.css"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="css/camera/record.css"/>
         <!-- EOF CSS INCLUDE -->                                      
     </head>
     <body>
@@ -61,7 +62,7 @@
                             </button>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <button class="tile tile-danger tile-valign">
+                            <button class="tile tile-danger tile-valign" onclick="showRecordingModal()">
                                 <i class="fa fa-microphone" aria-hidden="true"></i>
                                 <p style="font-size: 42px">Record Audio</p>
                             </button>
@@ -154,6 +155,36 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="modal" id="modal_record" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12 center">
+                                <button class="btn-record" id="recButton"></button>
+                                <h1 id="recording-text">Start Recording</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <ol id="recordingsList"></ol>
+                        <!-- <button id="capture"  class="btn btn-success"><i class="fa fa-camera"></i></button>
+                        <button id="repeat"  class="btn btn-warning" style="display:  none;" onclick="startCamera(); return false;"><i class="fa fa-repeat"></i></button>
+                        <button id="menus"  class="btn btn-info" style="display: none;" onclick="getText(1)">
+                            <span class="fa fa-cutlery"></span> Translate Menu
+                        </button>
+                        <button id="signal"  class="btn btn-info" style="display: none;" onclick="getText(2)">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Signals
+                        </button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <button type="button" class="mb-control" data-box="#message-box-sound-2" style="display: none;" id="alert">d</button>
         <div class="message-box message-box-danger animated fadeIn" data-sound="fail" id="message-box-sound-2">
             <div class="mb-container">
@@ -190,7 +221,8 @@
         <!-- END THIS PAGE PLUGINS-->        
 
         <script type="text/javascript" src="js/plugins.js"></script>        
-        <script type="text/javascript" src="js/actions.js"></script>        
+        <script type="text/javascript" src="js/actions.js"></script>  
+        <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
         <!-- END TEMPLATE -->
 
         <script type="text/javascript" src="assets/main.js"></script>
