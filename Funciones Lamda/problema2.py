@@ -2,10 +2,10 @@ import json
 import boto3
 import base64
 from datetime import datetime
-from collections import defaultdict
+
+s3 = boto3.client('s3')
 
 def subirAS3(bucket,image):
-    s3 = boto3.client('s3')
     now = datetime.now()
     name = now.strftime("%d-%m-%Y-%H:%M:%S")
     
@@ -18,41 +18,31 @@ def subirAS3(bucket,image):
 def detect_text(bucket,name):
 
     client=boto3.client('rekognition')
-    response=client.detect_text(Image={'S3Object':{'Bucket':bucket,'Name':'prueba'}})                  
+    response=client.detect_text(Image={'S3Object':{'Bucket':bucket,'Name':name}})                  
     textDetections=response['TextDetections']
     
     sentence = []
 
     for text in textDetections:
         if text['Confidence'] > 90:
-            sentence.append({texto: text['DetectedText'], idpadre: text['ParentId']})
+            sentence.append(text['DetectedText'])
 
     return sentence
 
-def SentenceArraytoString(sentence):
-    groups = defaultdict(list)
-
-    for obj in sentence:
-        groups[obj.idpadre].append(obj)
-
-    return groups.values()
+def traducir():
+    translate = boto3.client('translate')
+    result = translate.translate_text(Text="Hello, World",
+                                    SourceLanguageCode="en",
+                                    TargetLanguageCode="de")
+    print(f'TranslatedText: {result["TranslatedText"]}')
 
 def lambda_handler(event, context):
     image = event['foto']
     bucket = 'helpmepls-max'
    
-    texto_resultante = detect_text(bucket,subirAS3(bucket,image))
-    texto = SentenceArraytoString(texto_resultante)
-
+    texto_resultante=detect_text(bucket,subirAS3(bucket,image))
+    traducir()
     return {
         'statusCode': 200,
         'body': json.dumps(texto_resultante)
     }
-
-# def traducir(sentence,idiomaorigen,idiomadestino):
-#     translate = boto3.client('translate')
-
-#     result = translate.translate_text(Text=sentence,
-#                                   SourceLanguageCode=idiomaorigen,
-#                                   TargetLanguageCode=idiomadestino)
-#     return result["TranslatedText"]
