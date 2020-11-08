@@ -21,28 +21,36 @@ def detect_text(bucket,name):
     response=client.detect_text(Image={'S3Object':{'Bucket':bucket,'Name':name}})                  
     textDetections=response['TextDetections']
     
-    sentence = []
+    sentence_array = []
 
     for text in textDetections:
-        if text['Confidence'] > 90:
-            sentence.append(text['DetectedText'])
+        if text['Confidence'] > 90 and text['Type'] == 'LINE':
+            sentence_array.append(text['DetectedText'])
 
+    sentence = ""
+
+    for words in sentence_array:
+        sentence += words
+        sentence += "\n"
+    
     return sentence
 
-def traducir():
+def traducir(texto,idiomaorigen,idiomadestino):
     translate = boto3.client('translate')
-    result = translate.translate_text(Text="Hello, World",
-                                    SourceLanguageCode="en",
-                                    TargetLanguageCode="de")
-    print(f'TranslatedText: {result["TranslatedText"]}')
+    result = translate.translate_text(Text=texto,
+                                    SourceLanguageCode=idiomaorigen,
+                                    TargetLanguageCode=idiomadestino)
+    return result["TranslatedText"]
 
 def lambda_handler(event, context):
     image = event['foto']
+    idiomaorigen = event['idiomaorigen']
+    idiomadestino = event['idiomadestino']
     bucket = 'helpmepls-max'
    
-    texto_resultante=detect_text(bucket,subirAS3(bucket,image))
-    traducir()
+    texto_resultante = detect_text(bucket,subirAS3(bucket,image))
+    result = traducir(texto_resultante,idiomaorigen,idiomadestino)
     return {
         'statusCode': 200,
-        'body': json.dumps(texto_resultante)
+        'body': result
     }
