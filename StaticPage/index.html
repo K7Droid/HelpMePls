@@ -109,7 +109,7 @@
                                 <div class="panel-body">                                    
                                     <div class="row stacked">
                                         <div class="col-md-12"> 
-                                        <textarea class="form-control" rows="5" id="textr" placeholder="Write Some Text"></textarea> 
+                                        <textarea class="form-control" rows="5" id="textr" placeholder="Write Some Text" onchange="textHasChanged()"></textarea> 
                                         </div>
                                         
                                     </div>                                    
@@ -118,7 +118,7 @@
                                     <button class="btn btn-warning btn-block" onclick="send_text()">
                                         <i class="fa fa-volume-up" aria-hidden="true"></i>
                                     </button>
-                                    <audio id="audio-result" controls>
+                                    <audio id="audio-result" controls style="display: none;">
                                         <source id="ogg_src" src=""
                                             type="audio/ogg">
                                       Your browser does not support the audio element.
