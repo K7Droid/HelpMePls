@@ -7,6 +7,7 @@ var snapshotCanvas = document.getElementById('snapshot');
 var captureButton = document.getElementById('capture');
 var videoTracks;
 var alerta = $('#alert');
+let changeText = true
 
 $('#modal_basic').on('hidden.bs.modal', function () {
     stopCamera();
@@ -98,29 +99,45 @@ function getText(option){
 
 
 function send_text() {
-    $.ajax({
-        type: 'POST',
-        url: lambda_base_url_cas,
-        crossDomain: true,
-        data: JSON.stringify({
-        
-            text: $('#textr').val(), 
-            voice: $('#voice').val(),
-            lancode: $('#language').val()
+    const audio = $('#audio-result'); 
+    if(changeText){
+        $.ajax({
+            type: 'POST',
+            url: lambda_base_url_cas,
+            crossDomain: true,
+            data: JSON.stringify({
             
-        }),
-        contentType: 'application/json',
-        dataType: 'json'
-    }).done((data)=>{
-        //aca no se que harias con la respuesta :'v
-        $('#showResult').css('display','inherit');
-        $('#result_div').html('<p>'+data.message+'</p>')
-        $('#modal_basic').modal('hide');
-    }).fail(error => {
-        $('#errortext').html(error );
-        alerta.click()
-    })
+                text: $('#textr').val(), 
+                voice: $('#voice').val(),
+                langcode: $('#language').val()
+                
+            }),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done((data)=>{
+            // decimos que el texto no ha cambiado, hasta que se escriba nuevamente en el textAreas
+            changeText = false
+            //aca no se que harias con la respuesta :'v     
+            $("#ogg_src").attr("src", data.body.url);
+            audio[0].pause();
+            audio[0].load();//suspends and restores all audio element
+            // attach `canplay` event to `player`
+            audio[0].addEventListener("canplay", function handleEvent(e) {
+                audio[0].play()
+            });
+        }).fail(error => {
+            console.log('error')
+            $('#errortext').html(error );
+            alerta.click()
+        })
+    } else {
+        audio[0].play()
+    }
 
+}
+
+function textHasChanged(){
+    if(!changeText) changeText = true
 }
 
 
