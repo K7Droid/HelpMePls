@@ -27,10 +27,6 @@
                         <a href="index.html">Help me Plz</a>
                         <a href="#" class="x-navigation-control"></a>
                     </li> 
-                    <li > 
-                        <a href="asistencias.html"><span class="fa fa-check-square-o"></span> <span class="xn-text">Help Me!</span></a>                        
-                    </li>
-                    
                 </ul>
                 <!-- END X-NAVIGATION -->
             </div>
@@ -121,6 +117,11 @@
                                     <button class="btn btn-warning btn-block" onclick="send_text()">
                                         <i class="fa fa-volume-up" aria-hidden="true"></i>
                                     </button>
+                                    <audio id="audio-result" controls>
+                                        <source src="https://prou-mp3-polly.s3.amazonaws.com/audio/39263459-4bfd-4a9e-b234-832f33eaf40b.mp3?AWSAccessKeyId=ASIAQSJ4FWII7QNQSXUN&Expires=1604819753&Signature=VnVpFBmuap7Pj3ZpZXjHEY5ieQg%3D&x-amz-security-token=IQoJb3JpZ2luX2VjENf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIH0q0nO3q7gtA9RMk2YAScu1drVzd%2Bj%2BjvwbkDhv3lRSAiEA%2B4vKxB6lZiB8dG5Qxnz1YRgjX0vtiMADOmsMnIjSjzYqzgEIQBABGgwwMzkzMTc3Nzg5NjEiDFX1zrMG3WXY2MN%2FPiqrAXi0FaPo%2B4X0mks6%2BlMj0eelHdV44yxRRmBFpkcePlJyHKhlA1f0HokWLE5hkEisG4ixKq0OZizCS6X8T7bhHtCyvnJI36lY1UGa0ipgqwUO1fNImp37EUyg1XR5iXUFYmxHew8B%2FJ886wvuQu4zeLtZ7Ve6ufQKB5M4zSw2ilT9RyRIr2y6Ry4nuT1kkNS%2BSN9Fupvo47CcOcpuJ132iBzHCiRDQgEiB7HhTTD0rJ79BTrgAalA%2BPyqVNPFGt87UuWaRF21lAAkzWA9TH0dHDg7VpChueshIh2TkXCF2CMi5FkW1Nr4roX9LFrih%2BSTGVuQgFbSG2CwcEorcmlQKQgvsImGUtDTDe2%2B7YY4eYlWs%2Bw0RkvaUmj7x7SostGltebzcpC2KEB%2F98j6EhWb2PzfUwGYA%2BWguYssv6o59wk63ln426fea7XgZL3DlhiDeKgDy86L367NThvQLd%2BWdkaEiZHUSrc%2F%2Fa6yFBfjz4fq%2BuJKb2tClnBPr7%2Be5YvlR2q09MHP%2BGMLkTrB5HjhjLvQyymm"
+                                            type="audio/ogg">
+                                      Your browser does not support the audio element.
+                                    </audio>
                                 </div>
                             </div>
                         </div>
@@ -167,9 +168,6 @@
                 </div>
             </div>
         </div>
-        
-
-
 
         <!-- START PRELOADS -->
         <audio id="audio-alert" src="audio/alert.mp3" preload="auto"></audio>
@@ -191,137 +189,11 @@
         <script type="text/javascript" src="js/plugins/icheck/icheck.min.js"></script>
         <!-- END THIS PAGE PLUGINS-->        
 
-        
         <script type="text/javascript" src="js/plugins.js"></script>        
         <script type="text/javascript" src="js/actions.js"></script>        
         <!-- END TEMPLATE -->
-        <script>
-            const ec2_base_url = 'http://paginarequest' //Elastic Load Balancing
 
-            var player = document.getElementById('player'); 
-            var snapshotCanvas = document.getElementById('snapshot');
-            var captureButton = document.getElementById('capture');
-            var videoTracks;
-            var alerta = $('#alert');
-
-            $('#modal_basic').on('hidden.bs.modal', function () {
-                stopCamera();
-            })
-
-            function stopCamera(){
-                videoTracks.forEach(function(track) {track.stop()});
-            }
-
-            function startCamera(){
-                $('#showResult').css('display','none');
-                $('#result_div').html('')
-
-
-                $('#modal_basic').modal('show', {backdrop: 'static', keyboard: false});
-                $('#player').css('display', 'inherit');
-                $('#snapshot').css('display', 'none');
-                $('#menus').css('display', 'none');
-                $('#signal').css('display', 'none');
-                $('#repeat').css('display', 'none');
-                $('#capture').css('display', '');
-                navigator.mediaDevices.getUserMedia({video: true})
-                .then(handleSuccess);
-            }
-            
-            var handleSuccess = function(stream) {
-                // Attach the video stream to the video element and autoplay.
-                player.srcObject = stream;
-                videoTracks = stream.getVideoTracks();
-            };
-
-            captureButton.addEventListener('click', function() {
-                $('#player').css('display', 'none');
-                $('#snapshot').css('display', '');
-                $('#capture').css('display', 'none');
-                $('#menus').css('display', '');
-                $('#signal').css('display', '');
-                $('#repeat').css('display', '');
-                var context = snapshot.getContext('2d');
-                context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
-                videoTracks.forEach(function(track) {track.stop()});
-            });
-
-
-            function getText(option){
-                var canvas = document.getElementById('snapshot');
-                var imgData = canvas.toDataURL();
-                var endpoint="";
-
-                switch(option){
-                    case 1:
-                        endpoint = "/endpoint de menu";
-                        break;
-                    case 2:
-                        endpoint = "/endpoint de senal";
-                        break;
-                    default:
-                        return;
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: ec2_base_url + endpoint,
-                    crossDomain: true,
-                    dataType: 'json',
-                    data: {
-                        tipo : 1,
-                        foto : imgData,
-                        extension: 'png'
-                    },
-                }).done((data)=>{
-                    if(data.error != 0 ){
-                        $('#errortext').html(data.message );
-                        alerta.click()
-                    }else{
-                        $('#showResult').css('display','inherit');
-                        $('#result_div').html('<p>'+data.message+'</p>')
-                        $('#modal_basic').modal('hide');
-                    }
-                }).fail(error => {
-                    $('#errortext').html(error );
-                    alerta.click()
-                })
-            }
-
-
-            function send_text() {
-                const endpoint = "/endpoint Text"
-                $.ajax({
-                    type: 'POST',
-                    url: ec2_base_url + endpoint,
-                    crossDomain: true,
-                    dataType: 'json',
-                    data: {
-                        
-                        text: $('#textr').val(), 
-                        voice: $('#voice').val(),
-                        lancode: $('#language').val()
-                        
-                    },
-                }).done((data)=>{
-                    if(data.error != 0 ){
-                        $('#errortext').html(data.message );
-                        alerta.click()
-                    }else{
-                        //aca no se que harias con la respuesta :'v
-                        $('#showResult').css('display','inherit');
-                        $('#result_div').html('<p>'+data.message+'</p>')
-                        $('#modal_basic').modal('hide');
-                    }
-                }).fail(error => {
-                    $('#errortext').html(error );
-                    alerta.click()
-                })
-            }
-
-
-
-        </script>   
+        <script type="text/javascript" src="assets/main.js"></script>
     <!-- END SCRIPTS -->         
     </body>
 </html>
