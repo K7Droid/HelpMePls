@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DashboardComponent } from '../app/dashboard/dashboard.component'
 
 @Component({
   selector: 'app-root',

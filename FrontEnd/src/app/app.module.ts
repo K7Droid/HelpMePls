@@ -3,12 +3,18 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { InicioComponent } from './inicio/inicio.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { SpeakComponent } from './speak/speak.component';
+import { TranscribeComponent } from './transcribe/transcribe.component';
+import { TranslateComponent } from './translate/translate.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    InicioComponent
+    DashboardComponent,
+    SpeakComponent,
+    TranscribeComponent,
+    TranslateComponent,
   ],
   imports: [
     BrowserModule,
