@@ -59,36 +59,37 @@ captureButton.addEventListener('click', function() {
 function getText(option){
     var canvas = document.getElementById('snapshot');
     var imgData = canvas.toDataURL();
-    const endpoint = ''; // <============================================================== agregar lo que complementa la "lambda_url_base" por ejemplo /estudiante, /publicar
+    var foto = imgData.replace(/^data:image\/(png|jpg);base64,/, "");
+    const endpoint = '/get'; // <============================================================== agregar lo que complementa la "lambda_url_base" por ejemplo /estudiante, /publicar
 
-    switch(option){
+    /*switch(option){
         case 1:
             endpoint = "/endpoint de menu";
             break;
         case 2:
-            endpoint = "/endpoint de senal";
+            endpoint = "/get";
             break;
         default:
             return;
-    }
+    }*/
 
     $.ajax({
         type: 'POST',
-        url: lambda_base_url_max + endpoint, //<=============================================== agregar la "lambda_base_url" correcta
+        url: 'https://l89avk3jk2.execute-api.us-east-1.amazonaws.com/translatetext' + endpoint, //<=============================================== agregar la "lambda_base_url" correcta
         crossDomain: true,
-        dataType: 'json',
-        data: {
-            tipo : 1,
-            foto : imgData,
-            extension: 'png'
-        },
+        dataType: 'application/json',
+        data: JSON.stringify({
+            idiomaorigen : 'es',
+            idiomadestino : 'en',
+            foto : foto
+        }),
     }).done((data)=>{
         if(data.error != 0 ){
-            $('#errortext').html(data.message );
+            $('#errortext').html(data.errorMessage );
             alerta.click()
         }else{
             $('#showResult').css('display','inherit');
-            $('#result_div').html('<p>'+data.message+'</p>')
+            $('#result_div').html('<p>'+data.body+'</p>')
             $('#modal_basic').modal('hide');
         }
     }).fail(error => {
