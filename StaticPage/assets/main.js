@@ -38,6 +38,10 @@ var handleSuccess = function(stream) {
     videoTracks = stream.getVideoTracks();
 };
 
+function showRecordingModal() {
+    $('#modal_record').modal('show', {backdrop: 'static', keyboard: false})
+}
+
 captureButton.addEventListener('click', function() {
     $('#player').css('display', 'none');
     $('#snapshot').css('display', '');
@@ -113,9 +117,27 @@ function send_text() {
         $('#result_div').html('<p>'+data.message+'</p>')
         $('#modal_basic').modal('hide');
     }).fail(error => {
-        console.log('error')
         $('#errortext').html(error );
         alerta.click()
     })
 
 }
+
+
+
+$('#recButton').addClass("notRec");
+
+$('#recButton').click(function(){
+    if($('#recButton').hasClass('notRec')){
+        $('#recButton').removeClass("notRec");
+        $('#recButton').addClass("Rec");
+        $('#recording-text').html('Stop Recording')
+        startRecording();
+    }
+    else{
+        $('#recButton').removeClass("Rec");
+        $('#recButton').addClass("notRec");
+        $('#recording-text').html('Start Recording')
+        stopRecording();
+    }
+}); 
