@@ -5,7 +5,7 @@ const bucket_name = 'prou-mp3-polly'
     
 exports.handler =  async (event, context) => {
     const data = event;
-    const objectKey = context.awsRequestId
+    const objectKey = 'audio/' + context.awsRequestId  + '.mp3'
     // send request to Polly
     const  rpo = await new Promise((resolve, reject) => {
         const params = {
@@ -31,7 +31,7 @@ exports.handler =  async (event, context) => {
     const rs3 = await new Promise((resolve, reject) => {
         const params = {
             Bucket: bucket_name,
-            Key: objectKey + '.mp3',
+            Key: objectKey,
             Body: rpo.AudioStream,
             ACL:'public-read',
             ContentType: rpo.ContentType
@@ -42,7 +42,7 @@ exports.handler =  async (event, context) => {
         })
     })
     // getUrl from S3
-    const params = { Bucket: bucket_name, Key: objectKey + '.mp3' };
+    const params = { Bucket: bucket_name, Key: objectKey };
     const url = s3.getSignedUrl('getObject', params);
     // send response
     const response = {
