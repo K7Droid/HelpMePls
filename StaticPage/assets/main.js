@@ -105,7 +105,7 @@ function send_text() {
             
                 text: $('#textr').val(), 
                 voice: $('#voice').val(),
-                lancode: $('#language').val()
+                langcode: $('#language').val()
                 
             }),
             contentType: 'application/json',
