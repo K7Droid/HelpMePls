@@ -1,222 +1,121 @@
-const lambda_base_url = 'https://5kqbiloijh.execute-api.us-east-1.amazonaws.com/uAttendance'
+const lambda_base_url_cas = 'https://821smf0hk9.execute-api.us-east-1.amazonaws.com/helpmepls'
+const lambda_base_url_pao = 'https://5kqbiloijh.execute-api.us-east-1.amazonaws.com/uAttendance'
+const lambda_base_url_max = 'https://5kqbiloijh.execute-api.us-east-1.amazonaws.com/uAttendance'
 
-/* this will be replace by the url for the elastic load balancing*/
-const ec2_base_url = 'http://54.87.215.134:3000/uattendance'
-//const ec2_base_url = 'http://localhost:3000/uattendance'
+var player = document.getElementById('player'); 
+var snapshotCanvas = document.getElementById('snapshot');
+var captureButton = document.getElementById('capture');
+var videoTracks;
+var alerta = $('#alert');
 
-/*******************************************************************************************************************************/
-/** Server - EC2 **/
-const loginUsuario = () => {
-    //Login usuario tipo profesor
-    console.log('Login de usuario profesor')
-    const file = $('#loginimage')[0].files[0];
-    if( $('#loginimage')[0].files.length == 0){
-        $.ajax({
-            type: 'POST',
-            url: ec2_base_url + '/login',
-            crossDomain: true,
-            data: JSON.stringify({
-                tipo: 0, // 0 user y pass // 1 con foto
-                id: 'cristiancaste18', //input
-                password: '123', 
-            }),
-            contentType: 'application/json',
-            dataType: 'json',
-        }).done((data)=>{
-            console.log('Done!',data)
-        }).fail(error => {
-            console.log('Error',error)
-        })
+$('#modal_basic').on('hidden.bs.modal', function () {
+    stopCamera();
+})
 
-    } else {
-        const reader = new FileReader()
-        let response;
-        reader.readAsDataURL(file)
-        reader.onload = () => {
-            response = reader.result
-            //Registra usuario tipo profesor para que acceda al sistema
-            $.ajax({
-                type: 'POST',
-                url: ec2_base_url + '/login',
-                crossDomain: true,
-                data: JSON.stringify({ 
-                    tipo: 1,
-                    id: null, //--------> ASIGNAR EL VALOR DEL USERNAME
-                    password: null, //----> ASIGNAR EL VALOR DE LA CONTRASE;A UNA VEZ VERIFICADA QUE SE REPITIO CORRECTAMENTE
-                    foto: response, // Foto OPCIONAL
-                    extension: file.name.split('.')[1]
-                }),
-                contentType: 'application/json',
-                dataType: 'json',
-            }).done((data)=>{
-                console.log('Done!',data)
-            }).fail(error => {
-                console.log('Error',error)
-            })
-        }
-        reader.onerror = function (error) {
-            response =  null
-        };
-    }
+function stopCamera(){
+    videoTracks.forEach(function(track) {track.stop()});
 }
 
+function startCamera(){
+    $('#showResult').css('display','none');
+    $('#result_div').html('')
 
-const registrarUsuario = () => {
-    console.log('Registrar un usuario profesor')
-    const file = $('#registerimage')[0].files[0];
-    if( $('#registerimage')[0].files.length == 0){
-        $.ajax({
-            type: 'POST',
-            url: ec2_base_url + '/register',
-            crossDomain: true,
-            data: JSON.stringify({ 
-                id: 'newUserName',  //--------> ASIGNAR EL VALOR DEL USERNAME
-                password: 'newPass', //----> ASIGNAR EL VALOR DE LA CONTRASE;A UNA VEZ VERIFICADA QUE SE REPITIO CORRECTAMENTE
-                foto: null, // Foto OPCIONAL
-                extension: null, 
-            }),
-            contentType: 'application/json',
-            dataType: 'json',
-        }).done((data)=>{
-            console.log('Done!',data)
-        }).fail(error => {
-            console.log('Error',error)
-        })
-        return
-    }
-    const reader = new FileReader()
-    let response;
-    reader.readAsDataURL(file)
-    reader.onload = () => {
-        response = reader.result
-        //Registra usuario tipo profesor para que acceda al sistema
-        $.ajax({
-            type: 'POST',
-            url: ec2_base_url + '/register',
-            crossDomain: true,
-            data: JSON.stringify({ 
-                id: 'keanu', //--------> ASIGNAR EL VALOR DEL USERNAME data-imasf/,sdsdsdsd
-                password: 'john', //----> ASIGNAR EL VALOR DE LA CONTRASE;A UNA VEZ VERIFICADA QUE SE REPITIO CORRECTAMENTE
-                foto: response, // Foto OPCIONAL
-                extension: file.name.split('.')[1]
-            }),
-            contentType: 'application/json',
-            dataType: 'json',
-        }).done((data)=>{
-            console.log('Done!',data)
-        }).fail(error => {
-            console.log('Error',error)
-        })
-    }
-    reader.onerror = function (error) {
-        response =  null
-    };
+
+    $('#modal_basic').modal('show', {backdrop: 'static', keyboard: false});
+    $('#player').css('display', 'inherit');
+    $('#snapshot').css('display', 'none');
+    $('#menus').css('display', 'none');
+    $('#signal').css('display', 'none');
+    $('#repeat').css('display', 'none');
+    $('#capture').css('display', '');
+    navigator.mediaDevices.getUserMedia({video: true})
+    .then(handleSuccess);
 }
 
-const registrarEstudiante = () => {
-    console.log('Registrar usuario estudiante')
+var handleSuccess = function(stream) {
+    // Attach the video stream to the video element and autoplay.
+    player.srcObject = stream;
+    videoTracks = stream.getVideoTracks();
+};
 
-    const file = $('#studentimage')[0].files[0];
-    if( $('#studentimage')[0].files.length == 0){
-        return
-    }
-    const reader = new FileReader()
-    let response;
-    reader.readAsDataURL(file)
-    reader.onload = () => {
-        response = reader.result
-        //Registra usuario tipo profesor para que acceda al sistema
-        $.ajax({
-            type: 'POST',
-            url: ec2_base_url + '/student',
-            crossDomain: true,
-            data: JSON.stringify({ 
-                id: 'newUserName', // -----------> ASIGNAR EL VALOR INGRESADO
-                foto: response, 
-                extension: file.name.split('.')[1]
-            }),
-            contentType: 'application/json',
-            dataType: 'json',
-        }).done((data)=>{
-            console.log('Done!',data)
-        }).fail(error => {
-            console.log('Error',error)
-        })
-    }
-    reader.onerror = function (error) {
-        response =  null
-    };
-}
+captureButton.addEventListener('click', function() {
+    $('#player').css('display', 'none');
+    $('#snapshot').css('display', '');
+    $('#capture').css('display', 'none');
+    $('#menus').css('display', '');
+    $('#signal').css('display', '');
+    $('#repeat').css('display', '');
+    var context = snapshot.getContext('2d');
+    context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+    videoTracks.forEach(function(track) {track.stop()});
+});
 
-const getEstudiantes = () => {
-    console.log('obtenerEstudiantes')
-    $.ajax({
-        type: 'GET',
-        url: ec2_base_url + '/student',
-        crossDomain: true,
-        data: JSON.stringify({
-            payload: 'Hello world!'
-        }),
-        contentType: 'application/json',
-        dataType: 'json',
-    }).done((data) => {
-        console.log('Done!', data)
-    }).fail(error => {
-        console.log('Error',error)
-    })
-}
-/*******************************************************************************************************************************/
-/** Serverless - Lambda **/
-const registrarFotoGrupal = () => {
-    console.log('Registrar foto grupal')
+
+function getText(option){
+    var canvas = document.getElementById('snapshot');
+    var imgData = canvas.toDataURL();
+    const endpoint = ''; // <============================================================== agregar lo que complementa la "lambda_url_base" por ejemplo /estudiante, /publicar
+
+    switch(option){
+        case 1:
+            endpoint = "/endpoint de menu";
+            break;
+        case 2:
+            endpoint = "/endpoint de senal";
+            break;
+        default:
+            return;
+    }
+
     $.ajax({
         type: 'POST',
-        url: lambda_base_url+'/fotogrupal',
+        url: lambda_base_url_max + endpoint, //<=============================================== agregar la "lambda_base_url" correcta
         crossDomain: true,
-        data: JSON.stringify({ 
-            id: '0546546-2020-09-13', 
-            foto: 'example:data:base-64;asdjkkAJJSSAaksdksdkslkalkalslkdlklksad' //Foto OBLIGATORIA
+        dataType: 'json',
+        data: {
+            tipo : 1,
+            foto : imgData,
+            extension: 'png'
+        },
+    }).done((data)=>{
+        if(data.error != 0 ){
+            $('#errortext').html(data.message );
+            alerta.click()
+        }else{
+            $('#showResult').css('display','inherit');
+            $('#result_div').html('<p>'+data.message+'</p>')
+            $('#modal_basic').modal('hide');
+        }
+    }).fail(error => {
+        $('#errortext').html(error );
+        alerta.click()
+    })
+}
+
+
+function send_text() {
+    $.ajax({
+        type: 'POST',
+        url: lambda_base_url_cas,
+        crossDomain: true,
+        data: JSON.stringify({
+        
+            text: $('#textr').val(), 
+            voice: $('#voice').val(),
+            lancode: $('#language').val()
+            
         }),
         contentType: 'application/json',
         dataType: 'json'
     }).done((data)=>{
-        console.log('Done!',data)
+        //aca no se que harias con la respuesta :'v
+        $('#showResult').css('display','inherit');
+        $('#result_div').html('<p>'+data.message+'</p>')
+        $('#modal_basic').modal('hide');
     }).fail(error => {
-        console.log('Error',error)
+        console.log('error')
+        $('#errortext').html(error );
+        alerta.click()
     })
-}
 
-const getFotosGrupales = () => {
-    console.log('Obtener fotos grupales')
-    $.ajax({
-        type: 'GET',
-        url: lambda_base_url+'/fotogrupal',
-        crossDomain: true,
-        data: {
-            payload: 'Hello world!'
-        },
-        contentType: 'application/json',
-        dataType: 'json'
-    }).done((data) => {
-        console.log('Done!', data)
-        console.log(data['body'])
-    }).fail(error => {
-        console.log('Error',error)
-    })
-}
-
-const getAsistencias = () => {
-    console.log('Obtener asistencias')
-    $.ajax({
-        type: 'GET',
-        url: lambda_base_url + '/asistencias',
-        data: {
-            payload: 'Hello world!'
-        },
-        dataType: 'json',
-    }).done((data) => {
-        console.log('Done!', data)
-    }).fail(error => {
-        console.log('Error',error)
-    })
 }
