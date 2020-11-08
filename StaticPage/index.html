@@ -89,6 +89,42 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="control-label" style="margin-left: 5px">Voice</label>
+                            <select  class="form-control" id="voice" style="width: 100%; margin:5px">
+                                <option value="Mia">Mia</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label">Language</label>
+                            <select  class="form-control" id="language" style="width: 100%; margin:5px">
+                                <option value="es-MX">Español-Mexicano</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading ui-draggable-handle">
+                                    <div class="panel-title-box">
+                                        Write some Text to speak
+                                    </div>                                     
+                                </div>
+                                <div class="panel-body">                                    
+                                    <div class="row stacked">
+                                        <div class="col-md-12"> 
+                                        <textarea class="form-control" rows="5" id="textr" placeholder="Write Some Text"></textarea> 
+                                        </div>
+                                        
+                                    </div>                                    
+                                </div>
+                                <div class="panel-footer">
+                                    <button class="btn btn-warning btn-block" onclick="send_text()">
+                                        <i class="fa fa-volume-up" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>              
                 <!-- END CONTENT WRAP -->
                                 
@@ -252,6 +288,36 @@
                 })
             }
 
+
+            function send_text() {
+                const endpoint = "/endpoint Text"
+                $.ajax({
+                    type: 'POST',
+                    url: ec2_base_url + endpoint,
+                    crossDomain: true,
+                    dataType: 'json',
+                    data: {
+                        
+                        text: $('#textr').val(), 
+                        voice: $('#voice').val(),
+                        lancode: $('#language').val()
+                        
+                    },
+                }).done((data)=>{
+                    if(data.error != 0 ){
+                        $('#errortext').html(data.message );
+                        alerta.click()
+                    }else{
+                        //aca no se que harias con la respuesta :'v
+                        $('#showResult').css('display','inherit');
+                        $('#result_div').html('<p>'+data.message+'</p>')
+                        $('#modal_basic').modal('hide');
+                    }
+                }).fail(error => {
+                    $('#errortext').html(error );
+                    alerta.click()
+                })
+            }
 
 
 
