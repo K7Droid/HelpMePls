@@ -109,9 +109,10 @@ function send_text() {
         dataType: 'json'
     }).done((data)=>{
         //aca no se que harias con la respuesta :'v
-        $('#showResult').css('display','inherit');
-        $('#result_div').html('<p>'+data.message+'</p>')
-        $('#modal_basic').modal('hide');
+        const audio = $('#audio-result');      
+        $("#ogg_src").attr("src", data.body.url);
+        audio[0].pause();
+        audio[0].load();//suspends and restores all audio element
     }).fail(error => {
         console.log('error')
         $('#errortext').html(error );
