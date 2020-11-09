@@ -18,7 +18,7 @@
     </head>
     <body>
         <!-- START PAGE CONTAINER -->
-        <div class="page-container">
+        <div class="page-container page-navigation-toggled page-container-wide">
             
             <!-- START PAGE SIDEBAR -->
             <div class="page-sidebar">
@@ -70,8 +70,8 @@
                     </div>
                     <div class="row" id="showResult" style="display: none;">
                         <div class="col-md-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading ui-draggable-handle">
+                            <div class="panel panel-success">
+                                <div class="panel-heading ui-draggable-handle" style="background: #95b75d">
                                     <div class="panel-title-box">
                                         <h3>Result</h3>
                                     </div>                                     
@@ -150,15 +150,36 @@
                     <div class="modal-body">
                         <video id="player" autoplay></video>
                         <canvas id="snapshot" width=500 height=375 style="display: none;"></canvas>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label" style="margin-left: 5px">From</label>
+                                <select  class="form-control" id="from" style="width: 100%; margin:5px">
+                                    <option value="es">Español</option>
+                                    <option value="en">English</option>
+                                    <option value="fr">Français</option>
+                                    <option value="it">Italiano</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="ru">Russian</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">to</label>
+                                <select  class="form-control" id="too" style="width: 100%; margin:5px">
+                                    <option value="es">Español</option>
+                                    <option value="en">English</option>
+                                    <option value="fr">Français</option>
+                                    <option value="it">Italiano</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="ru">Russian</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button id="capture"  class="btn btn-success"><i class="fa fa-camera"></i></button>
                         <button id="repeat"  class="btn btn-warning" style="display:  none;" onclick="startCamera(); return false;"><i class="fa fa-repeat"></i></button>
                         <button id="menus"  class="btn btn-info" style="display: none;" onclick="getText(1)">
-                            <span class="fa fa-cutlery"></span> Translate Menu
-                        </button>
-                        <button id="signal"  class="btn btn-info" style="display: none;" onclick="getText(2)">
-                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Signals
+                            <span class="fa fa-cutlery"></span> Translate 
                         </button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                     </div>
@@ -175,6 +196,30 @@
                             <div class="col-md-12 center">
                                 <button class="btn-record" id="recButton"></button>
                                 <h1 id="recording-text">Start Recording</h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label" style="margin-left: 5px">From</label>
+                                <select  class="form-control" id="vfrom" style="width: 100%; margin:5px">
+                                    <option value="es">Español</option>
+                                    <option value="en">English</option>
+                                    <option value="fr">Français</option>
+                                    <option value="it">Italiano</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="ru">Russian</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">to</label>
+                                <select  class="form-control" id="vtoo" style="width: 100%; margin:5px">
+                                    <option value="es">Español</option>
+                                    <option value="en">English</option>
+                                    <option value="fr">Français</option>
+                                    <option value="it">Italiano</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="ru">Russian</option>
+                                </select>
                             </div>
                         </div>
                     </div>

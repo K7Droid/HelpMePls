@@ -1,5 +1,4 @@
 const lambda_base_url_cas = 'https://821smf0hk9.execute-api.us-east-1.amazonaws.com/helpmepls'
-const lambda_base_url_pao = 'https://5kqbiloijh.execute-api.us-east-1.amazonaws.com/uAttendance'
 const lambda_base_url_max = 'https://5kqbiloijh.execute-api.us-east-1.amazonaws.com/uAttendance'
 
 var player = document.getElementById('player'); 
@@ -40,6 +39,7 @@ var handleSuccess = function(stream) {
 };
 
 function showRecordingModal() {
+    $('#recordingsList').empty();
     $('#modal_record').modal('show', {backdrop: 'static', keyboard: false})
 }
 
@@ -61,7 +61,7 @@ function getText(option){
     var imgData = canvas.toDataURL();
     var foto = imgData.replace(/^data:image\/(png|jpg);base64,/, "");
     const endpoint = '/get'; // <============================================================== agregar lo que complementa la "lambda_url_base" por ejemplo /estudiante, /publicar
-
+    console.log('que pasa')
     /*switch(option){
         case 1:
             endpoint = "/endpoint de menu";
@@ -79,11 +79,12 @@ function getText(option){
         crossDomain: true,
         dataType: 'application/json',
         data: JSON.stringify({
-            idiomaorigen : 'es',
-            idiomadestino : 'en',
+            idiomaorigen : $('#from').val(),
+            idiomadestino : $('#too').val(),
             foto : foto
         }),
-    }).done((data)=>{
+    }).success(function(data){
+        console.log("dome")
         if(data.error != 0 ){
             $('#errortext').html(data.errorMessage );
             alerta.click()
@@ -93,8 +94,16 @@ function getText(option){
             $('#modal_basic').modal('hide');
         }
     }).fail(error => {
-        $('#errortext').html(error );
-        alerta.click()
+        if (error.status==200){
+            var obj = JSON.parse(error.responseText);
+            $('#showResult').css('display','inherit');
+            $('#result_div').html('<p>'+obj.body+'</p>')
+            $('#modal_basic').modal('hide');
+        }else{
+            $('#errortext').html(error );
+            console.log(error)
+            alerta.click()
+        }
     })
 }
 

@@ -71,7 +71,7 @@ function createDownloadLink(blob) {
 	  	};
 
 	  	xhr.onerror = function(e){
-	  		$('#errortext').html("Error uploading file"  );
+	  		$('#errortext').html("There was an error recognizing your voice");
         	alerta.click()
 			$('.stage').addClass('dot-hidden');
 			btn.html('Translate');
@@ -80,7 +80,9 @@ function createDownloadLink(blob) {
 
 	  	var fd=new FormData();
 	  	fd.append("audio_data",blob, filename);
-	  	xhr.open("POST",lambda_base_url_pao,true);
+	  	fd.append("languageFrom",$('#vfrom').val());
+	  	fd.append("langruageDestiny",$('#vtoo').val());
+	  	xhr.open("POST","https://u0awnx11al.execute-api.us-east-2.amazonaws.com/RekognitionApi/compare/audio",true);
 	  	xhr.send(fd);
 	})
 	li.appendChild(document.createTextNode (" "))//add a space in between
